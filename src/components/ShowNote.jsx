@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 
-export default function ShowNote() {
+export default function ShowNote({ addNotesToStorage }) {
     const dragItem = useRef(null)
 
     const [notes, setNotes] = useState(() => {
@@ -10,7 +10,7 @@ export default function ShowNote() {
 
     useEffect(() => {
         localStorage.setItem('notes', JSON.stringify(notes))
-    }, [notes])
+    }, [notes, addNotesToStorage])
 
     function handleDragEnd(e, id) {
         if (!dragItem.current) return
