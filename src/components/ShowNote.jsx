@@ -19,10 +19,40 @@ export default function ShowNote({ addNotesToStorage }) {
         let x = e.clientX - rect.width / 2
         let y = e.clientY - rect.height / 2
 
-        if (x < 0) x = 0
-        if (y < 0) y = 0
-        if (x + rect.width > window.innerWidth) x = window.innerWidth - rect.width
-        if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height
+        // Collision detection with other notes
+        const collides = notes.some(item => {
+            if (item.id !== id) {
+                const itemRect = {
+                    left: item.left,
+                    top: item.top,
+                    right: item.left + rect.width,
+                    bottom: item.top + rect.height
+                }
+
+                if (
+                    x < itemRect.right &&
+                    x + rect.width > itemRect.left &&
+                    y < itemRect.bottom &&
+                    y + rect.height > itemRect.top
+                ) {
+                    // Collision detected, move to original position
+                    return true
+                }
+            }
+            return false
+        })
+
+        if (collides) {
+            // Move to original position
+            x = notes.find(item => item.id === id).left
+            y = notes.find(item => item.id === id).top
+        } else {
+            // Ensure position within viewport
+            if (x < 0) x = 0
+            if (y < 0) y = 0
+            if (x + rect.width > window.innerWidth) x = window.innerWidth - rect.width
+            if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height
+        }
 
         const newList = notes.map(item => {
             if (item.id === id) {
