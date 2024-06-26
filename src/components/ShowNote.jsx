@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
+import { RxCross1 } from "react-icons/rx"
 
 export default function ShowNote({ addNotesToStorage }) {
     const dragItem = useRef(null)
@@ -64,6 +65,11 @@ export default function ShowNote({ addNotesToStorage }) {
         setNotes(newList)
     }
 
+    function handleDeleteItem(id) {
+        setNotes(notes.filter(item => item.id !== id))
+        window.location.reload()
+    }
+
     return (
         <React.Fragment>
             {notes.map((item, i) => (
@@ -74,8 +80,16 @@ export default function ShowNote({ addNotesToStorage }) {
                     ref={el => (dragItem.current = el)}
                     onDragEnd={(e) => handleDragEnd(e, item.id)}
                     draggable
-                    className="max-w-56 p-3 cursor-grab active:cursor-grabbing select-none bg-rose-100 rounded">
-                    <p><span role="img" aria-label="pin">📌</span> {item.note}</p>
+                    className="max-w-56 px-2 py-1 cursor-grab active:cursor-grabbing select-none bg-rose-100 rounded border-t-4 border-rose-300">
+                    <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-light text-zinc-700 flex justify-end uppercase cursor-default" title={new Date(item.id).toLocaleString()}>
+                            {new Date(item.id).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
+                        </span>
+                        <div onClick={() => handleDeleteItem(item.id)} className="text-zinc-700 cursor-pointer">
+                            <RxCross1 fontSize={10} />
+                        </div>
+                    </div>
+                    <p className="mt-2">{item.note}</p>
                 </div>
             ))}
         </React.Fragment>

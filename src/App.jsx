@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ShowNote from "./components/ShowNote";
 import AddButton from "./components/AddButton";
 import AddNote from "./components/AddNote";
 
 export default function App() {
+  const fixedButton = useRef(null)
   const [isNotePad, setIsNotePad] = useState(true)
 
   function closeNote() {
@@ -13,8 +14,8 @@ export default function App() {
   return (
     <section>
       <div className="overflow-hidden">
-        <ShowNote />
-        <AddButton onClick={closeNote} />
+        <ShowNote fixedButton={fixedButton} />
+        <AddButton onClick={closeNote} fixedButton={fixedButton} />
         <AddNote IsHidden={{ isNotePad, setIsNotePad }} onClick={closeNote} />
       </div>
     </section>
